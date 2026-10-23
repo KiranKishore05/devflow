@@ -14,7 +14,7 @@ async function bootstrap() {
 
     const db = await checkDbConnection();
     if (db.status === 'connected') {
-      console.log(`[Database] PostgreSQL connected successfully (latency: ${db.latencyMs}ms)`);
+      console.log(`[Database] Connected successfully (latency: ${db.latencyMs}ms)`);
     } else {
       console.warn(`[Database] Standby / Disconnected: ${db.error}`);
     }

@@ -10,7 +10,8 @@ export class ApiError extends Error {
   }
 }
 
-const API_BASE = '/api';
+const rawApiUrl = (import.meta.env.VITE_API_URL as string | undefined)?.replace(/\/+$/, '');
+const API_BASE = rawApiUrl ? (rawApiUrl.endsWith('/api') ? rawApiUrl : `${rawApiUrl}/api`) : '/api';
 
 interface RequestOptions extends RequestInit {
   params?: Record<string, string | number | boolean | undefined>;

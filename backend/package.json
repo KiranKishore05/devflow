@@ -10,6 +10,8 @@
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:deploy": "prisma migrate deploy",
+    "prisma:generate:pg": "prisma generate --schema=prisma/schema.postgresql.prisma",
+    "prisma:deploy:pg": "prisma migrate deploy --schema=prisma/schema.postgresql.prisma",
     "test": "vitest run",
     "test:watch": "vitest"
   },

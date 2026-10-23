@@ -8,7 +8,7 @@ export interface TokenPayload {
 
 export function signToken(payload: TokenPayload): string {
   return jwt.sign(payload, env.JWT_SECRET, {
-    expiresIn: '7d',
+    expiresIn: (env.JWT_EXPIRES_IN || '7d') as any,
   });
 }
 

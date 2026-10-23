@@ -21,15 +21,45 @@ export function createApp(): Express {
   app.use(helmet());
 
   // CORS configuration
-  const allowedOrigins = [env.CLIENT_ORIGIN, 'http://localhost:5173', 'http://127.0.0.1:5173'];
+  const configuredOrigins = env.CLIENT_ORIGIN
+    ? env.CLIENT_ORIGIN.split(',')
+        .map((o) => o.trim().replace(/\/+$/, ''))
+        .filter(Boolean)
+    : [];
+
+  const devOrigins = [
+    'http://localhost:5173',
+    'http://127.0.0.1:5173',
+    'http://localhost:5000',
+    'http://localhost:5001',
+    'http://localhost:3000',
+  ];
+
+  const allowedOrigins =
+    env.NODE_ENV === 'production'
+      ? configuredOrigins
+      : Array.from(new Set([...configuredOrigins, ...devOrigins]));
+
   app.use(
     cors({
       origin: (origin, callback) => {
-        if (!origin || allowedOrigins.includes(origin)) {
-          callback(null, true);
-        } else {
-          callback(null, true); // Allow during local development
+        // Allow requests with no origin (e.g. mobile apps, curl, server-to-server health checks)
+        if (!origin) {
+          return callback(null, true);
         }
+
+        const normalizedOrigin = origin.replace(/\/+$/, '');
+        if (allowedOrigins.includes(normalizedOrigin)) {
+          return callback(null, true);
+        }
+
+        // In production, reject unauthorized origins
+        if (env.NODE_ENV === 'production') {
+          return callback(new Error(`CORS policy blocked access from origin: ${origin}`));
+        }
+
+        // In development/test, permit unmatched origins for developer convenience
+        return callback(null, true);
       },
       credentials: true,
       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],

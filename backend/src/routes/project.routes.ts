@@ -4,6 +4,7 @@ import { prisma } from '../utils/prisma.js';
 import { sendSuccess, sendError } from '../utils/response.js';
 import { validateBody } from '../middleware/validate.js';
 import { requireAuth } from '../middleware/auth.js';
+import { hashPassword } from '../utils/password.js';
 
 const router = Router();
 router.use(requireAuth);
@@ -253,12 +254,21 @@ router.post('/:id/members', validateBody(addMemberSchema), async (req, res) => {
       return sendError(res, 'You do not have permission to invite members', 403);
     }
 
-    const invitedUser = await prisma.user.findUnique({
+    let invitedUser = await prisma.user.findUnique({
       where: { email: email.toLowerCase() },
     });
 
     if (!invitedUser) {
-      return sendError(res, `No registered DevFlow account with email "${email}".`, 404);
+      // Auto-provision user account for the invited colleague
+      const displayName = email.split('@')[0];
+      const defaultPasswordHash = await hashPassword('Developer123!');
+      invitedUser = await prisma.user.create({
+        data: {
+          email: email.toLowerCase(),
+          name: displayName,
+          passwordHash: defaultPasswordHash,
+        },
+      });
     }
 
     const existingMember = await prisma.projectMembership.findUnique({

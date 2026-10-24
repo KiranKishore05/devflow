@@ -1,5 +1,5 @@
 import React from 'react';
-import { Menu, Search, Activity, Bell } from 'lucide-react';
+import { Menu, Search } from 'lucide-react';
 import { useAuth } from '@/features/auth/AuthContext';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/lib/api';
@@ -17,7 +17,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenMobileSidebar }) => {
     queryFn: async () => {
       try {
         return await api.get<{ status: string; database: { status: string } }>('/health');
-      } catch (err) {
+      } catch {
         return { status: 'degraded', database: { status: 'disconnected' } };
       }
     },

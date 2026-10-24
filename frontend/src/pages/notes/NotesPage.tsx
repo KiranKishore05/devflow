@@ -2,15 +2,17 @@ import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/lib/api';
 import { ProjectNote, Project } from '@/types';
-import { FileCode2, Plus, Search, Trash2, Edit3, FolderKanban, Calendar, Sparkles } from 'lucide-react';
+import { FileCode2, Plus, Search, Trash2, Edit3, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { Select } from '@/components/ui/Select';
 import { EmptyState } from '@/components/ui/EmptyState';
+import { useToast } from '@/features/toast/ToastContext';
 
 export const NotesPage: React.FC = () => {
+  const toast = useToast();
   const [search, setSearch] = useState('');
   const [selectedProjectId, setSelectedProjectId] = useState<string>('ALL');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -72,13 +74,15 @@ export const NotesPage: React.FC = () => {
       setIsSubmitting(true);
       if (editingNote) {
         await api.put(`/notes/${editingNote.id}`, { title, content });
+        toast.success('Technical note updated');
       } else {
         await api.post('/notes', { title, content, projectId });
+        toast.success('Technical note saved');
       }
       setIsModalOpen(false);
       refetch();
     } catch (err: any) {
-      alert(err.message || 'Failed to save note');
+      toast.error(err.message || 'Failed to save note');
     } finally {
       setIsSubmitting(false);
     }
@@ -89,8 +93,9 @@ export const NotesPage: React.FC = () => {
     try {
       await api.delete(`/notes/${id}`);
       refetch();
+      toast.success('Technical note deleted');
     } catch (err: any) {
-      alert(err.message || 'Failed to delete note');
+      toast.error(err.message || 'Failed to delete note');
     }
   };
 

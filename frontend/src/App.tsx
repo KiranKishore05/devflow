@@ -2,9 +2,11 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from '@/features/auth/AuthContext';
+import { ToastProvider } from '@/features/toast/ToastContext';
 import { ProtectedRoute } from '@/features/auth/ProtectedRoute';
 import { DashboardLayout } from '@/layouts/DashboardLayout';
 
+import { LandingPage } from '@/pages/landing/LandingPage';
 import { LoginPage } from '@/pages/auth/LoginPage';
 import { RegisterPage } from '@/pages/auth/RegisterPage';
 import { DashboardPage } from '@/pages/dashboard/DashboardPage';
@@ -28,34 +30,35 @@ export function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <BrowserRouter>
-          <Routes>
-            {/* Public Auth Routes */}
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
+        <ToastProvider>
+          <BrowserRouter>
+            <Routes>
+              {/* Public Routes */}
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<RegisterPage />} />
 
-            {/* Protected SaaS Application Routes */}
-            <Route
-              path="/"
-              element={
-                <ProtectedRoute>
-                  <DashboardLayout />
-                </ProtectedRoute>
-              }
-            >
-              <Route index element={<Navigate to="/dashboard" replace />} />
-              <Route path="dashboard" element={<DashboardPage />} />
-              <Route path="projects" element={<ProjectsPage />} />
-              <Route path="projects/:projectId" element={<ProjectDetailPage />} />
-              <Route path="kanban" element={<KanbanBoardPage />} />
-              <Route path="notes" element={<NotesPage />} />
-              <Route path="analytics" element={<AnalyticsPage />} />
-            </Route>
+              {/* Protected SaaS Application Routes */}
+              <Route
+                element={
+                  <ProtectedRoute>
+                    <DashboardLayout />
+                  </ProtectedRoute>
+                }
+              >
+                <Route path="/dashboard" element={<DashboardPage />} />
+                <Route path="/projects" element={<ProjectsPage />} />
+                <Route path="/projects/:projectId" element={<ProjectDetailPage />} />
+                <Route path="/kanban" element={<KanbanBoardPage />} />
+                <Route path="/notes" element={<NotesPage />} />
+                <Route path="/analytics" element={<AnalyticsPage />} />
+              </Route>
 
-            {/* Catch-all */}
-            <Route path="*" element={<Navigate to="/dashboard" replace />} />
-          </Routes>
-        </BrowserRouter>
+              {/* Catch-all redirects to Landing Page */}
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </BrowserRouter>
+        </ToastProvider>
       </AuthProvider>
     </QueryClientProvider>
   );

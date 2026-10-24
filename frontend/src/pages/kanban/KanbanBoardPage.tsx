@@ -5,16 +5,10 @@ import { Task, TaskStatus, TaskPriority, Project, TaskComment } from '@/types';
 import {
   Plus,
   Search,
-  Filter,
   Calendar,
-  AlertCircle,
   MessageSquare,
-  Clock,
-  CheckCircle2,
-  MoreHorizontal,
   Trash2,
   Send,
-  User as UserIcon,
 } from 'lucide-react';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
@@ -22,6 +16,7 @@ import { Modal } from '@/components/ui/Modal';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { Select } from '@/components/ui/Select';
+import { useToast } from '@/features/toast/ToastContext';
 
 const COLUMNS: { id: TaskStatus; label: string; accentColor: string }[] = [
   { id: 'TODO', label: 'To Do', accentColor: 'border-slate-700' },
@@ -30,7 +25,13 @@ const COLUMNS: { id: TaskStatus; label: string; accentColor: string }[] = [
   { id: 'DONE', label: 'Done', accentColor: 'border-emerald-500/40' },
 ];
 
+const checkIsOverdue = (dateStr?: string | null) => {
+  if (!dateStr) return false;
+  return new Date(dateStr).getTime() < Date.now();
+};
+
 export const KanbanBoardPage: React.FC = () => {
+  const toast = useToast();
   const [selectedProjectId, setSelectedProjectId] = useState<string>('ALL');
   const [searchQuery, setSearchQuery] = useState('');
   const [priorityFilter, setPriorityFilter] = useState<'ALL' | TaskPriority>('ALL');
@@ -95,8 +96,9 @@ export const KanbanBoardPage: React.FC = () => {
     try {
       await api.patch(`/tasks/${taskId}/status`, { status: newStatus });
       refetchTasks();
+      toast.success(`Task moved to ${COLUMNS.find((c) => c.id === newStatus)?.label || newStatus}`);
     } catch (err: any) {
-      alert(err.message || 'Failed to update task status');
+      toast.error(err.message || 'Failed to update task status');
     }
   };
 
@@ -108,8 +110,9 @@ export const KanbanBoardPage: React.FC = () => {
       if (activeTask && activeTask.id === taskId) {
         setActiveTask({ ...activeTask, status: newStatus });
       }
+      toast.success(`Task moved to ${COLUMNS.find((c) => c.id === newStatus)?.label || newStatus}`);
     } catch (err: any) {
-      alert(err.message || 'Failed to update task status');
+      toast.error(err.message || 'Failed to update task status');
     }
   };
 
@@ -117,7 +120,7 @@ export const KanbanBoardPage: React.FC = () => {
     e.preventDefault();
     const projId = newTaskProjectId || (projects.length > 0 ? projects[0].id : '');
     if (!projId) {
-      alert('Please create a project first before adding tasks.');
+      toast.error('Please create a project first before adding tasks.');
       return;
     }
     if (!newTaskTitle) return;
@@ -138,8 +141,9 @@ export const KanbanBoardPage: React.FC = () => {
       setNewTaskDesc('');
       setNewTaskDueDate('');
       refetchTasks();
+      toast.success('Task created successfully');
     } catch (err: any) {
-      alert(err.message || 'Error creating task');
+      toast.error(err.message || 'Error creating task');
     } finally {
       setIsSubmittingTask(false);
     }
@@ -152,8 +156,9 @@ export const KanbanBoardPage: React.FC = () => {
       await api.delete(`/tasks/${id}`);
       if (activeTask?.id === id) setActiveTask(null);
       refetchTasks();
+      toast.success('Task deleted successfully');
     } catch (err: any) {
-      alert(err.message || 'Failed to delete task');
+      toast.error(err.message || 'Failed to delete task');
     }
   };
 
@@ -174,17 +179,15 @@ export const KanbanBoardPage: React.FC = () => {
         comments: [...(activeTask.comments || []), res.data],
       });
       refetchTasks();
+      toast.success('Comment posted');
     } catch (err: any) {
-      alert(err.message || 'Failed to post comment');
+      toast.error(err.message || 'Failed to post comment');
     } finally {
       setIsPostingComment(false);
     }
   };
 
-  const isOverdue = (dateStr?: string | null) => {
-    if (!dateStr) return false;
-    return new Date(dateStr) < new Date();
-  };
+  const isOverdue = checkIsOverdue;
 
   return (
     <div className="space-y-6">

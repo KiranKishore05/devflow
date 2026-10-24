@@ -3,20 +3,16 @@ import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { api } from '@/lib/api';
 import { Project, ProjectStatus } from '@/types';
+import { useToast } from '@/features/toast/ToastContext';
 import {
   FolderKanban,
   Plus,
   Search,
-  Filter,
   Users,
   CheckSquare,
   FileText,
-  Calendar,
-  MoreVertical,
-  Archive,
   Trash2,
 } from 'lucide-react';
-import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { Modal } from '@/components/ui/Modal';
@@ -25,6 +21,7 @@ import { Textarea } from '@/components/ui/Textarea';
 import { EmptyState } from '@/components/ui/EmptyState';
 
 export const ProjectsPage: React.FC = () => {
+  const { success, error: toastError } = useToast();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<'ALL' | ProjectStatus>('ALL');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -70,8 +67,9 @@ export const ProjectsPage: React.FC = () => {
       setKey('');
       setDescription('');
       refetch();
+      success(`Project "${name}" created successfully!`, 'Project Created');
     } catch (err: any) {
-      alert(err.message || 'Error creating project');
+      toastError(err.message || 'Error creating project', 'Creation Failed');
     } finally {
       setIsSubmitting(false);
     }
@@ -84,8 +82,9 @@ export const ProjectsPage: React.FC = () => {
     try {
       await api.delete(`/projects/${id}`);
       refetch();
+      success(`Project "${name}" was deleted.`, 'Project Deleted');
     } catch (err: any) {
-      alert(err.message || 'Failed to delete project');
+      toastError(err.message || 'Failed to delete project', 'Deletion Failed');
     }
   };
 

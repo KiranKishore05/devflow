@@ -2,7 +2,7 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/lib/api';
 import { DashboardMetrics } from '@/types';
-import { BarChart3, TrendingUp, CheckCircle2, Clock, AlertTriangle, Activity, Calendar } from 'lucide-react';
+import { BarChart3, TrendingUp, Activity } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
 
 export const AnalyticsPage: React.FC = () => {
@@ -21,6 +21,19 @@ export const AnalyticsPage: React.FC = () => {
     if (!total) return 0;
     return Math.round((count / total) * 100);
   };
+
+  if (isLoading) {
+    return (
+      <div className="space-y-8 animate-pulse">
+        <div className="h-10 w-72 bg-slate-800/60 rounded-lg"></div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="h-28 bg-slate-900/60 border border-slate-800 rounded-xl"></div>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8">

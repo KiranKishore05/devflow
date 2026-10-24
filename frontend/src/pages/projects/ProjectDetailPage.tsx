@@ -12,8 +12,6 @@ import {
   Plus,
   Calendar,
   Trash2,
-  MessageSquare,
-  Shield,
   UserPlus,
 } from 'lucide-react';
 import { Badge } from '@/components/ui/Badge';
@@ -23,8 +21,10 @@ import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { Select } from '@/components/ui/Select';
 import { EmptyState } from '@/components/ui/EmptyState';
+import { useToast } from '@/features/toast/ToastContext';
 
 export const ProjectDetailPage: React.FC = () => {
+  const toast = useToast();
   const { projectId } = useParams<{ projectId: string }>();
   const [activeTab, setActiveTab] = useState<'KANBAN' | 'TASKS' | 'NOTES' | 'MEMBERS'>('KANBAN');
 
@@ -89,8 +89,9 @@ export const ProjectDetailPage: React.FC = () => {
       setTaskDueDate('');
       refetchTasks();
       refetchProject();
+      toast.success('Task created successfully');
     } catch (err: any) {
-      alert(err.message || 'Error creating task');
+      toast.error(err.message || 'Error creating task');
     }
   };
 
@@ -108,8 +109,9 @@ export const ProjectDetailPage: React.FC = () => {
       setNoteContent('');
       refetchNotes();
       refetchProject();
+      toast.success('Technical note created');
     } catch (err: any) {
-      alert(err.message || 'Error creating note');
+      toast.error(err.message || 'Error creating note');
     }
   };
 
@@ -124,8 +126,9 @@ export const ProjectDetailPage: React.FC = () => {
       setIsMemberModalOpen(false);
       setMemberEmail('');
       refetchProject();
+      toast.success(`Member added as ${memberRole.toLowerCase()}`);
     } catch (err: any) {
-      alert(err.message || 'Error adding project member');
+      toast.error(err.message || 'Error adding project member');
     }
   };
 
@@ -133,8 +136,9 @@ export const ProjectDetailPage: React.FC = () => {
     try {
       await api.patch(`/tasks/${taskId}/status`, { status: newStatus });
       refetchTasks();
+      toast.success('Task status updated');
     } catch (err: any) {
-      alert(err.message || 'Failed to update task');
+      toast.error(err.message || 'Failed to update task');
     }
   };
 
@@ -144,8 +148,9 @@ export const ProjectDetailPage: React.FC = () => {
       await api.delete(`/tasks/${taskId}`);
       refetchTasks();
       refetchProject();
+      toast.success('Task deleted');
     } catch (err: any) {
-      alert(err.message || 'Failed to delete task');
+      toast.error(err.message || 'Failed to delete task');
     }
   };
 
@@ -155,8 +160,9 @@ export const ProjectDetailPage: React.FC = () => {
       await api.delete(`/notes/${noteId}`);
       refetchNotes();
       refetchProject();
+      toast.success('Technical note deleted');
     } catch (err: any) {
-      alert(err.message || 'Failed to delete note');
+      toast.error(err.message || 'Failed to delete note');
     }
   };
 

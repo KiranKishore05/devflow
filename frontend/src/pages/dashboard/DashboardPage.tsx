@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { api } from '@/lib/api';
 import { DashboardMetrics, Project } from '@/types';
+import { useToast } from '@/features/toast/ToastContext';
 import {
   FolderKanban,
   CheckCircle2,
@@ -13,7 +14,6 @@ import {
   ArrowUpRight,
   Activity,
   Layers,
-  Calendar,
   Sparkles,
 } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
@@ -24,6 +24,7 @@ import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 
 export const DashboardPage: React.FC = () => {
+  const { success, error: toastError } = useToast();
   const [isNewProjectModalOpen, setIsNewProjectModalOpen] = useState(false);
   const [projectName, setProjectName] = useState('');
   const [projectKey, setProjectKey] = useState('');
@@ -67,8 +68,9 @@ export const DashboardPage: React.FC = () => {
       setProjectDescription('');
       refetchProjects();
       refetchMetrics();
+      success(`Project "${projectName}" created successfully!`, 'Project Created');
     } catch (err: any) {
-      alert(err.message || 'Failed to create project');
+      toastError(err.message || 'Failed to create project', 'Creation Failed');
     } finally {
       setIsCreatingProject(false);
     }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, Link, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard,
   FolderKanban,
@@ -7,7 +7,6 @@ import {
   FileCode2,
   BarChart3,
   LogOut,
-  Sparkles,
   Layers,
   ChevronRight,
 } from 'lucide-react';
@@ -33,7 +32,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
 
   const handleLogout = async () => {
     await logout();
-    navigate('/login');
+    navigate('/');
   };
 
   return (
@@ -53,7 +52,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
         )}
       >
         {/* Brand / Logo */}
-        <div className="flex items-center gap-3 px-6 h-16 border-b border-slate-800/80">
+        <Link to="/dashboard" className="flex items-center gap-3 px-6 h-16 border-b border-slate-800/80 hover:bg-slate-800/30 transition-colors">
           <div className="h-9 w-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-violet-400 flex items-center justify-center shadow-lg shadow-indigo-500/25 ring-1 ring-white/20">
             <Layers className="h-5 w-5 text-white" />
           </div>
@@ -66,7 +65,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
             </div>
             <p className="text-[11px] text-slate-400 font-mono">Productivity Hub</p>
           </div>
-        </div>
+        </Link>
 
         {/* Navigation items */}
         <nav className="flex-1 px-3 py-5 space-y-1 overflow-y-auto">

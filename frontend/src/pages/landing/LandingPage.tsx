@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/features/auth/AuthContext';
+import { DevFlowLogo } from '@/components/ui/DevFlowLogo';
 import {
-  Layers,
   ArrowRight,
   Columns3,
   FolderKanban,
@@ -48,16 +48,8 @@ export const LandingPage: React.FC = () => {
       <header className="sticky top-0 z-40 bg-slate-950/80 backdrop-blur-xl border-b border-slate-800/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           {/* Brand Logo */}
-          <Link to="/" className="flex items-center gap-3 group">
-            <div className="h-9 w-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-violet-400 flex items-center justify-center shadow-lg shadow-indigo-600/25 ring-1 ring-white/20 group-hover:scale-105 transition-transform">
-              <Layers className="h-5 w-5 text-white" />
-            </div>
-            <div className="flex items-center gap-1.5">
-              <span className="font-bold text-lg tracking-tight text-white">DevFlow</span>
-              <span className="text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
-                PRO
-              </span>
-            </div>
+          <Link to="/" className="flex items-center group">
+            <DevFlowLogo size="md" showText showBadge />
           </Link>
 
           {/* Desktop Navigation Links */}
@@ -702,11 +694,8 @@ export const LandingPage: React.FC = () => {
       {/* Footer */}
       <footer className="border-t border-slate-900 bg-slate-950 py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-xs text-slate-400">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-3">
-            <div className="h-7 w-7 rounded-lg bg-indigo-600 flex items-center justify-center text-white">
-              <Layers className="h-4 w-4" />
-            </div>
-            <span className="font-bold text-slate-200 text-sm">DevFlow</span>
+          <div className="flex items-center gap-2">
+            <DevFlowLogo size="sm" showText />
             <span className="text-slate-400">| Complete Developer Productivity Platform</span>
           </div>
 

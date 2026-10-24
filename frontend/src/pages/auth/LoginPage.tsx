@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/features/auth/AuthContext';
 import { useToast } from '@/features/toast/ToastContext';
-import { Layers, Mail, Lock, ArrowRight, AlertCircle, Eye, EyeOff, ArrowLeft } from 'lucide-react';
+import { Mail, Lock, ArrowRight, AlertCircle, Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
+import { DevFlowLogo } from '@/components/ui/DevFlowLogo';
 
 export const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -65,13 +66,13 @@ export const LoginPage: React.FC = () => {
         </div>
 
         {/* Brand header */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-8 flex flex-col items-center">
           <Link to="/" className="inline-flex items-center justify-center mb-3 group">
-            <div className="h-12 w-12 rounded-2xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-violet-400 flex items-center justify-center shadow-xl shadow-indigo-600/30 ring-1 ring-white/20 group-hover:scale-105 transition-transform">
-              <Layers className="h-6 w-6 text-white" />
-            </div>
+            <DevFlowLogo size="lg" animated />
           </Link>
-          <h1 className="text-2xl font-bold text-slate-100 tracking-tight">Welcome back to DevFlow</h1>
+          <h1 className="text-2xl font-bold text-slate-100 tracking-tight">
+            Welcome back to <span className="text-white">Dev</span><span className="bg-gradient-to-r from-violet-400 via-fuchsia-400 to-pink-500 bg-clip-text text-transparent">Flow</span>
+          </h1>
           <p className="text-sm text-slate-400 mt-1">Sign in to manage projects, tasks, and technical notes</p>
         </div>
 

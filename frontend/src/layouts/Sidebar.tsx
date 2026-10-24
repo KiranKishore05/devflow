@@ -7,10 +7,10 @@ import {
   FileCode2,
   BarChart3,
   LogOut,
-  Layers,
   ChevronRight,
 } from 'lucide-react';
 import { useAuth } from '@/features/auth/AuthContext';
+import { DevFlowLogo } from '@/components/ui/DevFlowLogo';
 import { clsx } from 'clsx';
 
 interface SidebarProps {
@@ -52,19 +52,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
         )}
       >
         {/* Brand / Logo */}
-        <Link to="/dashboard" className="flex items-center gap-3 px-6 h-16 border-b border-slate-800/80 hover:bg-slate-800/30 transition-colors">
-          <div className="h-9 w-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-violet-400 flex items-center justify-center shadow-lg shadow-indigo-500/25 ring-1 ring-white/20">
-            <Layers className="h-5 w-5 text-white" />
-          </div>
-          <div>
-            <div className="flex items-center gap-1.5">
-              <span className="font-bold text-lg tracking-tight text-white">DevFlow</span>
-              <span className="text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
-                PRO
-              </span>
-            </div>
-            <p className="text-[11px] text-slate-400 font-mono">Productivity Hub</p>
-          </div>
+        <Link to="/dashboard" className="flex items-center px-5 h-16 border-b border-slate-800/80 hover:bg-slate-800/30 transition-colors group">
+          <DevFlowLogo size="md" showText showBadge />
         </Link>
 
         {/* Navigation items */}
